@@ -1,5 +1,7 @@
+var webpack=require('webpack');
+
 module.exports = {
-    entry: "./src/index.tsx",
+    entry:  [ "bootstrap-loader", "./src/index.tsx" ],
     output: {
         filename: "bundle.js",
         path: __dirname + "/dist"
@@ -19,10 +21,20 @@ module.exports = {
             { test: /\.tsx?$/, use: "awesome-typescript-loader" },
 
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
-            { test: /\.js$/, enforce: "pre", use: "source-map-loader" }
+            { test: /\.js$/, enforce: "pre", use: "source-map-loader" },
+            { test: /\.scss$/, loaders: ['style', 'css', 'postcss', 'sass'] },
+            { test: /\.(woff2?|svg)$/, loader: 'url-loader?limit=10000' },
+            { test: /\.(ttf|eot)$/, loader: 'file-loader' },
+            { test:/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/, loader: 'imports-loader?jQuery=jquery' },
         ]
     },
-
+    plugins: [
+        new webpack.ProvidePlugin({
+            jQuery: 'jquery',
+            $: 'jquery',
+            jquery: 'jquery'
+        })
+    ],
     // When importing a module whose path matches one of the following, just
     // assume a corresponding global variable exists and use that instead.
     // This is important because it allows us to avoid bundling all of our
